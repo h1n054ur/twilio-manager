@@ -1,1 +1,1 @@
-# TODO: Implement VoiceConfigMenu (configure voice)
+# VoiceConfigMenu: choose URL/TwiML/SIP trunk

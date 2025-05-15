@@ -1,1 +1,1 @@
-# TODO: Implement SubaccountMenu (subaccount management)
+# SubaccountMenu: table of subaccounts, switch/create

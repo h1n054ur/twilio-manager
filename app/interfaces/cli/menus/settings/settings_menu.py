@@ -1,1 +1,1 @@
-# TODO: Implement SettingsMenu (admin menu)
+# SettingsMenu: list options and dispatch accordingly

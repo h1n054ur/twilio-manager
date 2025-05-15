@@ -1,1 +1,1 @@
-# TODO: Implement MessagingService
+# Wrappers around core.message

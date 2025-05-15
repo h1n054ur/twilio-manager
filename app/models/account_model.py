@@ -1,1 +1,1 @@
-# TODO: Define data classes for account info
+# Data classes for account info

@@ -1,1 +1,1 @@
-# TODO: Implement file-based logging
+# Optional file-based logging (structured JSON)

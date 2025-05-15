@@ -1,1 +1,1 @@
-# TODO: Implement ConfigManagementMenu (bulk config)
+# ConfigMgmtMenu: bulk config templates/audit

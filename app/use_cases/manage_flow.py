@@ -1,1 +1,1 @@
-# TODO: Orchestrate manage flow
+# Logic for ManageMenu → number actions

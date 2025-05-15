@@ -1,1 +1,1 @@
-# TODO: Implement LogsMenu (view logs)
+# LogsMenu: choose messaging or call logs, paginated table

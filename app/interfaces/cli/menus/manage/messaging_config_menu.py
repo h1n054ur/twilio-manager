@@ -1,1 +1,1 @@
-# TODO: Implement MessagingConfigMenu (configure messaging)
+# MessagingConfigMenu: URL/TwiML/Service management

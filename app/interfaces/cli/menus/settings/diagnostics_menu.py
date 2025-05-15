@@ -1,1 +1,1 @@
-# TODO: Implement DiagnosticsMenu (logs & diagnostics)
+# DiagnosticsMenu: rate-limit/webhook error tables

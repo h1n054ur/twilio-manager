@@ -1,3 +1,1 @@
-# Twilio Manager CLI
-
-Initial scaffold.
+# Twilio CLI Scaffold

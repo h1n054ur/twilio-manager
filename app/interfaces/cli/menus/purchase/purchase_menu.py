@@ -1,1 +1,1 @@
-# TODO: Implement PurchaseMenu (guided flow)
+# PurchaseMenu: inline prompts for country/type/mode/capabilities

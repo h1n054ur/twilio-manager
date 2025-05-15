@@ -1,5 +1,0 @@
-twilio
-rich
-python-dotenv
-requests
-pytest

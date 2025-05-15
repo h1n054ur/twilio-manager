@@ -1,1 +1,1 @@
-# TODO: Define data classes for phone number records
+# Data classes for number record & search session metadata

@@ -1,1 +1,1 @@
-# TODO: Implement DevToolsMenu (developer tools)
+# DevToolsMenu: webhook/sandbox/test-credentials info

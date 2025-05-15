@@ -1,1 +1,1 @@
-# TODO: Define data classes for message records
+# Data classes for SMS logs/records

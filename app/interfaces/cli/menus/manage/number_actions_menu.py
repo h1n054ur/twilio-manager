@@ -1,1 +1,1 @@
-# TODO: Implement NumberActionsMenu (per-number actions)
+# NumberActionsMenu: list call/SMS/logs/config/release options

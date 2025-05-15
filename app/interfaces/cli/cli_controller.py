@@ -1,1 +1,1 @@
-# TODO: Bootstrap CLI application and MainMenu
+# Bootstraps menus, runs the menu loop

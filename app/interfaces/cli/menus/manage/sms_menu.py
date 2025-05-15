@@ -1,1 +1,1 @@
-# TODO: Implement SmsMenu (send SMS)
+# SmsMenu: prompt for destination/message, result

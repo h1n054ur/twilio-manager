@@ -1,1 +1,1 @@
-# TODO: Implement SecurityMenu (API keys & IP whitelist)
+# SecurityMenu: list/manage API keys & IP whitelist

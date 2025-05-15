@@ -1,1 +1,1 @@
-# TODO: Implement ReleaseMenu (release number)
+# ReleaseMenu: confirm and release number

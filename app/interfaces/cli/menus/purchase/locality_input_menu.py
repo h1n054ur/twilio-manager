@@ -1,1 +1,1 @@
-# TODO: Implement LocalityInputMenu (display locality table)
+# LocalityInputMenu: render table of regions/localities

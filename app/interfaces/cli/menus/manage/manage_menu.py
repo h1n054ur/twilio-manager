@@ -1,1 +1,1 @@
-# TODO: Implement ManageMenu (active numbers table)
+# ManageMenu: render active numbers table

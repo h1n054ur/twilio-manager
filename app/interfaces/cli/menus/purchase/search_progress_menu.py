@@ -1,1 +1,1 @@
-# TODO: Implement SearchProgressMenu (Rich progress bar)
+# SearchProgressMenu: show Rich progress bar

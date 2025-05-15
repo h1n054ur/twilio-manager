@@ -1,1 +1,1 @@
-# TODO: Implement AccountService
+# Wrappers around core.account for CLI usage

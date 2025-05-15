@@ -1,1 +1,1 @@
-# TODO: Implement SearchResultsMenu (paginated results table)
+# SearchResultsMenu: paginated table, sort/save, select indexes

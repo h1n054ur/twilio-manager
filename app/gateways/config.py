@@ -1,1 +1,1 @@
-# TODO: Load configuration from environment or .env
+# Load .env or env vars, expose config object

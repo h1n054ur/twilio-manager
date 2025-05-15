@@ -1,5 +1,1 @@
-from app.interfaces.menus.base_menu import BaseMenu
-
-class MainMenu(BaseMenu):
-    """Main menu of the application."""
-    pass
+# MainMenu: choices 1–3, dispatch to Purchase, Manage, Settings

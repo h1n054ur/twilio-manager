@@ -1,1 +1,1 @@
-# TODO: Implement ConfigMenu (display current settings table)
+# ConfigMenu: display current settings table

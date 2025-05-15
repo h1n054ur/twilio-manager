@@ -1,1 +1,1 @@
-# TODO: Implement PurchaseConfirmMenu (confirm purchase)
+# PurchaseConfirmMenu: display chosen numbers, confirm purchase

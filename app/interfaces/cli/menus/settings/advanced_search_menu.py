@@ -1,1 +1,1 @@
-# TODO: Implement AdvancedSearchMenu (deep search)
+# AdvancedSearchMenu: deep number search table

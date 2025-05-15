@@ -1,3 +1,1 @@
-class BaseMenu:
-    """Base class for all menus."""
-    pass
+# BaseMenu class: clear screen, render header, prompt utilities

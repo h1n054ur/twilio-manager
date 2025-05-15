@@ -1,0 +1,190 @@
+Project Implementation Plan: Phases, Sub-Phases & Detailed Steps
+----------------------------------------------------------------
+
+
+Phase 1: Foundation & Bootstrapping
+-----------------------------------
+DONOT DEVIATE FROM THE ALREADY CREATED DIRECTORY STRUCTURE
+Incorporates every bit of logic from the full user-flow and splits into bite-sized work items.
+Goal: Get a runnable CLI scaffold, configuration, logging, and DI in place.
+
+1. Repository & Environment
+   - Initialize Git repo, add `.gitignore`.
+   - Create Python 3.10+ virtualenv, activate.
+   - Add `requirements.txt`: `twilio`, `rich`, `requests`, `python-dotenv`, `click`, `pytest`.
+
+2. Configuration & Secrets
+   - `app/gateways/config.py`: load `.env` via `dotenv`; expose `TWILIO_ACCOUNT_SID`, `AUTH_TOKEN`, etc.
+   - `shared/settings.py`: dataclass for config values.
+
+3. Logging
+   - `shared/logging.py`: configure root logger (DEBUG/INFO), console handler, rotating file handler.
+   - Use `logger = logging.getLogger(__name__)` in every module.
+
+4. Dependency Injection
+   - `app/interfaces/cli_controller.py`: define `CLIController` wiring `services` and `menus`.
+   - Expose `main()` → `CLIController().run()`.
+
+5. Entry Point
+   - `__main__.py` calls `main()`.
+   - Smoke-run: verify “Main Menu” renders.
+
+
+
+
+Phase 2: Core Menu Engine & Base Classes
+
+----------------------------------------
+DONOT DEVIATE FROM THE ALREADY CREATED DIRECTORY STRUCTURE
+Incorporates every bit of logic from the full user-flow and splits into bite-sized work items.
+Goal: Build BaseMenu utilities that every menu will extend.
+
+1. BaseMenu Enhancements (`app/interfaces/menus/base_menu.py`)
+   - `clear_screen()` via `os.system('cls'/'clear')`.
+   - `render_header(title: str)` using a Rich panel.
+   - `prompt_choice(options: dict[str, Callable])` loop until valid.
+   - `prompt_input(label: str, validator: Callable=None)`.
+   - Centralize `console = RichConsole()` and styles.
+
+2. Menu Navigation Logic
+   - `self.parent: BaseMenu|None` on every menu.
+   - `show()` returns control on “Back”.
+   - Auto-inject a “Back” item in BaseMenu.
+
+3. MainMenu Stub (`app/interfaces/menus/main_menu.py`)
+   - Show 1–3, dispatch to `PurchaseMenu`, `ManageMenu`, `SettingsMenu`.
+   - Test back/exit behavior.
+
+4. Smoke Test
+   - Verify selecting 1, 2, 3 routes correctly (stubs allowed).
+
+Phase 3: Domain Models & Country Data
+-------------------------------------
+DONOT DEVIATE FROM THE ALREADY CREATED DIRECTORY STRUCTURE
+Incorporates every bit of logic from the full user-flow and splits into bite-sized work items.
+Goal: Centralize all data types and static lookups.
+
+1. Country & Region Data (`app/models/country_data.py`)
+   - Paste full `COUNTRY_DATA` dict (with area codes).
+   - Helper `get_area_codes(country: str) -> list[int]`.
+
+2. Data Classes
+   - `NumberRecord(number, city, state, type, price)`
+   - `SearchSession(unique_count, empty_streaks, batches)`
+   - `UsageStats(usage, cost, projection)`
+   - `LogEntry(timestamp, direction, status, details)`
+
+3. Validation Utilities
+   - Validate country ISO, phone patterns, capability sets.
+
+Phase 4: Gateway Layer & Services
+---------------------------------
+DONOT DEVIATE FROM THE ALREADY CREATED DIRECTORY STRUCTURE
+Incorporates every bit of logic from the full user-flow and splits into bite-sized work items.
+Goal: Wrap HTTP, Twilio SDK, and file I/O behind clean interfaces.
+
+1. Twilio Gateway (`app/gateways/twilio_gateway.py`)
+   - `get_client()` → `Client`.
+   - Methods: `list_numbers(filters)`, `purchase_number(sid)`, `release_number(sid)`, `update_number_config(sid, cfg)`, `make_call(from_, to)`, `send_sms(from_, to, body)`, `list_logs(type, sid, page_token)`.
+
+2. HTTP Gateway (`app/gateways/http_gateway.py`)
+   - Twilio REST “AvailablePhoneNumbers” raw calls.
+   - `search_batch(country, type, capabilities, page_size, page_token)`.
+
+3. File Logger (`app/gateways/file_logger.py`)
+   - JSON debug logger (optional).
+
+4. Service Layer (`app/services/`)
+   - NumberService: `search_available(...)`, `purchase_numbers(...)`, `list_active_numbers()`, `release_number(sid)`, `get_number_config(sid)`, `update_number_config(sid, cfg)`.
+   - VoiceService: `make_call(from_, to)`.
+   - MessagingService: `send_sms(from_, to, body)`.
+   - AccountService: `get_usage()`, `get_billing()`.
+   - LogsService: `list_logs(type, sid, page)`.
+
+Phase 5: Purchase Numbers Flow
+------------------------------
+DONOT DEVIATE FROM THE ALREADY CREATED DIRECTORY STRUCTURE
+Incorporates every bit of logic from the full user-flow and splits into bite-sized work items.
+Goal: Fully implement nested “1. Purchase Numbers” guided flow.
+
+1. SelectCountryMenu
+   - US/CA/GB/AU or “Other” free-form ISO.
+
+2. SelectTypeMenu
+   - Fetch types via `twilio_gateway.list_numbers(country_iso)`.
+
+3. SearchModeMenu
+   - ByDigitsMenu: 3–10 digits; US & len=3 → lookup area codes; else “contains”.
+   - ByLocalityMenu: fetch distinct localities via HTTP gateway metadata.
+
+4. SelectCapabilitiesMenu
+   - Choose Voice, SMS, MMS (at least one).
+
+5. SearchExecutionMenu
+   - “Searching…” panel; call `NumberService.search_available()`.
+   - Loop 1 s, batch of 50, dedupe, update Rich progress bar every 50.
+   - Stop at 500 unique or 3 empty rounds.
+
+6. SearchResultsMenu
+   - Paginated table of `NumberRecord`.
+   - Keys: [n]/[p], [s], [j]/[c], [x], [b].
+
+7. PurchaseConfirmMenu
+   - Confirm queue vs immediate purchase.
+   - Call `NumberService.purchase_numbers()`.
+   - Show ✔/✖ per number.
+   - Pause, then back.
+
+Phase 6: Manage Numbers Flow
+----------------------------
+DONOT DEVIATE FROM THE ALREADY CREATED DIRECTORY STRUCTURE
+Incorporates every bit of logic from the full user-flow and splits into bite-sized work items.
+Goal: Flesh out “2. Manage Numbers” immediate nested flow.
+
+1. ActiveNumbersMenu
+   - List via `NumberService.list_active_numbers()`.
+
+2. NumberActionsMenu
+   - Options: Call, SMS, View Logs, Configure, Release, Back.
+
+3. CallMenu
+   - Prompt dest, validate, call `VoiceService.make_call()`.
+
+4. SmsMenu
+   - Prompt dest+body, call `MessagingService.send_sms()`.
+
+5. LogsMenu
+   - Messaging vs Calls vs Back, paginated.
+
+6. ConfigMenu
+   - Show config, options: Configure Voice, Configure Messaging, Set Friendly Name, Back.
+
+7. VoiceConfigMenu & MessagingConfigMenu
+   - Prompt URL+method, list TwiML Apps/SIP Trunks/Messaging Services, update via NumberService.
+
+8. ReleaseMenu
+   - Confirm DELETE, call `NumberService.release_number()`.
+
+Phase 7: Settings & Admin Flow
+------------------------------
+DONOT DEVIATE FROM THE ALREADY CREATED DIRECTORY STRUCTURE
+Incorporates every bit of logic from the full user-flow and splits into bite-sized work items.
+Goal: Build “3. Settings & Admin” menu + submenus.
+
+1. SettingsMenu: 3.1–3.9, Back.
+
+2. BillingMenu (3.1): `AccountService.get_usage()`, `get_billing()`.
+
+3. SecurityMenu (3.2): Manage API keys & IP whitelist.
+
+4. SubaccountMenu (3.3): View/Switch/Create via AccountService.
+
+5. DevToolsMenu (3.4): Show webhook URL, sandbox toggle, test creds.
+
+6. AccountLogsMenu (3.5): Global logs, paginated.
+
+7. AdvancedSearchMenu (3.6): Multi-filter form, call `search_advanced()`, paginated.
+
+8. ConfigMgmtMenu (3.7): List templates, apply/remove in bulk.
+
+9. DiagnosticsMenu (3.8): Show webhook failures, rate-limit events.

@@ -1,0 +1,148 @@
+📘 Twilio Manager CLI — Full User Flow with Descriptions
+=========================================================
+
+🧭 Developer Summary
+---------------------
+This CLI app is a **fully menu-driven, guided wrapper around Twilio**, designed for speed, clarity, and extendability.  
+Most functionality uses the **Twilio Python SDK**, except for the number search flow which uses direct HTTP requests.
+
+All user interactions are designed to be **driven flows** — users respond to prompts in a sequence, selecting from menus or tables. There are **no freeform SID or resource inputs**.
+
+⚠️ Special Behavior:
+- **1. 📞 Purchase Numbers** and **2. 📟 Manage Numbers** are both **immediate nested flows**:
+  - Pressing `1` or `2` takes the user directly into a multi-step interaction (starting with country or number list), **not a menu of options**.
+  - These flows continue step-by-step, each expecting a user choice.
+
+MAIN MENU
+----------
+1. 📞 Purchase Numbers       → Search and buy numbers (via raw API — nested flow begins immediately)
+2. 📟 Manage Numbers         → Manage, configure, or release owned numbers (nested flow begins immediately)
+3. 🧾 Settings & Admin       → All account-wide settings, logs, security, tools (standard menu)
+
+──────────────────────────────────────────────────────────────
+
+1. 📞 Purchase Numbers (Nested Flow)
+-------------------------------------
+_A guided flow to search and purchase phone numbers (uses raw HTTP)._
+
+1.1 Select Country
+    → Prompt shown immediately after pressing 1
+    → Options: US, CA, GB, AU, Other (manual)
+    → Stores country ID + code
+
+1.2 Select Number Type
+    → Dynamically loaded from Twilio API for that country
+
+1.3 Choose Search Mode
+    1. By Digits/Area Code
+        → If 3-digit input in US → match against area codes
+        → Else uses "contains" pattern
+    2. By Locality
+        → Shows filtered list of localities from API
+
+1.4 Select Capabilities
+    → Voice, SMS, or Both
+
+1.5 Begin Search (via raw HTTP API)
+    → 1-second interval requests
+    → Stop when:
+        • 500 unique numbers found, OR
+        • 3 consecutive requests return no new numbers
+    → Display rich progress bar (increments of 50)
+
+1.6 View Results (Paginated Table)
+    → Fields: Index, Number, City, State, Type, Price
+    → Options:
+        [n] Next / [p] Previous / [s] Sort
+        [j] Save to JSON / [c] Save to CSV
+        [x] Select number(s) to purchase
+        [b] Back
+
+1.7 Select & Purchase
+    → Choose index(es)
+    → Confirm single or batch
+    → Show success/failure per number
+
+──────────────────────────────────────────────────────────────
+
+2. 📟 Manage Numbers (Nested Flow)
+-----------------------------------
+_Pressing 2 immediately shows your active Twilio numbers in a table._
+
+2.1 View Active Numbers
+    → Shown immediately after pressing 2
+    → Table with index, number, city, state, type, price
+
+2.2 Select Number by Index
+    → Displays number-specific actions:
+
+    2.2.1 📤 Make a Call
+        → Enter destination number
+        → Calls via SDK
+
+    2.2.2 💬 Send an SMS
+        → Destination + message
+        → Uses SDK
+
+    2.2.3 📄 View Logs
+        1. Messaging Logs
+        2. Call Logs
+        3. Back
+
+    2.2.4 ⚙️ Configure Number
+        → View current config:
+            - Friendly Name
+            - Voice: URL / TwiML / SIP
+            - Messaging: URL / TwiML / Messaging Service
+        → Actions:
+            1. Configure Voice (choose method, enter URL, POST/GET, app, or trunk)
+            2. Configure Messaging (same as voice)
+            3. Set Friendly Name
+            4. Back
+
+    2.2.5 🗑 Release Number
+        → Confirm + execute release
+
+    2.2.6 🔙 Back
+        → Returns to active number list
+
+──────────────────────────────────────────────────────────────
+
+3. 🧾 Settings & Admin (Standard Menu)
+---------------------------------------
+_Global and diagnostic tools not tied to specific numbers._
+
+3.1 Usage & Billing
+    → View usage, cost estimates
+
+3.2 Security & Compliance
+    → API keys, auth tokens, IP whitelists
+
+3.3 Subaccount Management
+    → View, switch, create subaccounts
+
+3.4 Developer Tools
+    → Webhooks, Sandbox, test credentials
+
+3.5 Account Logs
+    → View account-wide message/call/system logs
+
+3.6 Advanced Search
+    → Deep number filtering (type, location, price)
+
+3.7 Configuration Management
+    → Bulk config tools, audit templates, cloning
+
+3.8 Logs & Diagnostics
+    → View webhook errors, rate limits, failed API calls
+
+3.9 Back
+
+──────────────────────────────────────────────────────────────
+
+✅ Summary of Key Behaviors
+----------------------------
+- All flows are menu/table-driven — **no SID or raw text entry**
+- `1. Purchase Numbers` and `2. Manage Numbers` are **immediate guided flows**
+- Search logic is API-driven, not SDK-based (to support pagination/deduplication)
+- SDK used for all other flows (calls, SMS, logs, configs, etc.)

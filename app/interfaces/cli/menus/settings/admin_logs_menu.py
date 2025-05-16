@@ -1,1 +1,0 @@
-# AdminLogsMenu: global logs table

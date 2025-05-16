@@ -1,0 +1,6 @@
+twilio
+rich
+requests
+python-dotenv
+click
+pytest

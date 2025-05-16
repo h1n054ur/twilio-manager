@@ -1,1 +1,7 @@
-# Data classes for account info
+from dataclasses import dataclass
+
+@dataclass
+class UsageStats:
+    usage: float
+    cost: float
+    projection: float

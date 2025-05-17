@@ -10,7 +10,18 @@ class NumberService:
         return self.http.get_number_types(country)
 
     def search_available(self, country, number_type, search_mode, pattern, locality, capabilities, progress_callback):
-        return self.http.search_batch(country, number_type, capabilities, pattern, locality, progress_callback)
+        """Search for available numbers with progress tracking.
+        
+        Args:
+            progress_callback: Function to update progress (0-100)
+        Returns:
+            List of available numbers
+        """
+        try:
+            return self.http.search_batch(country, number_type, capabilities, pattern, locality, progress_callback)
+        except Exception as e:
+            console.print(f"[red]Error searching for numbers: {str(e)}[/red]")
+            return []
 
     def purchase_numbers(self, sids):
         results = []
